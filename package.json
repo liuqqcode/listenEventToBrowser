@@ -1,0 +1,15 @@
+{
+  "name": "watchbrowser",
+  "version": "1.0.17",
+  "description": "监听浏览器行为",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "lcoker",
+  "license": "ISC",
+  "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^4.3.0",
+    "axios": "^1.7.0"
+  }
+}
