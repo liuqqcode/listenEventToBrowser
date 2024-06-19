@@ -1,11 +1,14 @@
 import FingerprintJS from '@fingerprintjs/fingerprintjs'; // 浏览器指纹识别库
-import platform from './environment'
+import platform from "./environment"
 import axios from "axios";
+
 let userID = '' as string
 let url = '' as string
 let mac = '' as string
 let status = false as boolean
 let obj = {} as any
+let headers = {} as any
+let startTime =  window.performance.timeOrigin as number
 
 let eventTime = {
   click: 0,
@@ -63,7 +66,7 @@ export default class {
   /**
    * 获取自定义的对象
    * */
-  getObj(val:any) {
+  getObj() {
     return obj
   }
   
@@ -73,6 +76,20 @@ export default class {
   request(type: string, data:any){
     request(data, type)
   }
+  
+  /**
+   * 设置headers
+   * */
+  setHeaders(obj:any) {
+    headers = obj
+  }
+  
+  /**
+   * 设置当前时间为开始时间，刷新开始时间
+   * */
+  resetStartTime() {
+    startTime = new Date().getTime()
+  }
 }
 
 /**
@@ -81,10 +98,9 @@ export default class {
 const getMac = async() => {
   const fp = await FingerprintJS.load()
   const result = await fp.get()
-  const visitorId = result.visitorId
-  mac = visitorId
+  mac = result.visitorId
 }
-getMac()
+getMac().then()
 /**
  * 当前时间搓
  * */
@@ -124,21 +140,26 @@ export function setDoTime(type:string){
 /**
  * 发送请求，
  * */
-export const request = (data:any, type?: string) => {
+export const request = (data:any, type:string) => {
   if (!status){
     return
   }
-  axios.post(url, {
-    type,
-    mac,
-    userID,
-    obj,
-    data: data,
-    env: platform(),
-    page: window.location.href,
-    time: timestamp(),
-    showTime: parseInt(String(new Date().getTime() - window.performance.timeOrigin))
-  }).then(res => {
-  
-  })
+  for (let key in headers) {
+    axios.defaults.headers.common[key] = headers[key]
+  }
+  setTimeout(() => {
+    let tempObj = JSON.parse(JSON.stringify(obj))
+    axios.post(url, {
+      type,
+      mac,
+      userID,
+      obj: tempObj,
+      data: data,
+      env: platform(),
+      page: window.location.href,
+      time: timestamp(),
+      showTime: parseInt(String(new Date().getTime() - startTime))
+    }).then()
+    obj = {}
+  }, 10)
 }

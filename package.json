@@ -1,15 +1,31 @@
 {
   "name": "watchbrowser",
-  "version": "1.0.17",
+  "version": "1.0.24",
   "description": "监听浏览器行为",
-  "main": "index.ts",
+  "main": "./src/index.ts",
+  "types": "./src/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "prepublishOnly": "npm run build",
+    "start": "webpack serve --open chrome.exe"
   },
   "author": "lcoker",
   "license": "ISC",
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^4.3.0",
-    "axios": "^1.7.0"
+    "axios": "^1.7.0",
+    "webpack-dev-server": "3.11.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "@types/node": "^20.14.2",
+    "babel-loader": "^8.1.0",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   }
 }

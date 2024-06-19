@@ -12,6 +12,7 @@ watchEvent.init({
   url: string, // 上传接口地址，统一post
   userID: string, // 操作用户id
   timeOut: number, // 节流时间，默认1000
+  headers: any, // 接口请求headers
 })
 ```
 
@@ -26,6 +27,7 @@ watchEvent.init({
     setObj({}); // 设置提交的自定义obj，如果已经有obj，先getObj拿到数据再提交
     getObj(); // 获取自定义数据的obj
     request(tpye:string, data:any); // 触发请求，type:类型， data:主动提交的数据
+    setHeaders(headers:any); // 设置headers
 
 四、提交数据解释
 
@@ -35,7 +37,7 @@ watchEvent.init({
     obj: 自定义数据
     page: 当前页面
     showTime: 触发提交的时间距离打开页面的时间差，展示时间
-    time: 当前时间搓
+    time: 当前时间戳
     type: 触发的事件
     userID：用户id
 
