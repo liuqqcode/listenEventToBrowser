@@ -26,7 +26,7 @@ export default class {
     /**
      * 获取自定义的对象
      * */
-    getObj(val: any): any;
+    getObj(): any;
     /**
      * 主动触发请求
      * */
@@ -35,6 +35,14 @@ export default class {
      * 设置headers
      * */
     setHeaders(obj: any): void;
+    /**
+     * 设置sign
+     * */
+    setSign(obj: any): void;
+    /**
+     * 设置当前时间为开始时间，刷新开始时间
+     * */
+    resetStartTime(): void;
 }
 /**
  * 当前时间搓
@@ -51,4 +59,4 @@ export declare function setDoTime(type: string): boolean;
 /**
  * 发送请求，
  * */
-export declare const request: (data: any, type?: string) => void;
+export declare const request: (data: any, type: string) => void;

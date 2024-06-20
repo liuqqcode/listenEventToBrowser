@@ -4,14 +4,20 @@ const path = require('path');
 module.exports = {
     // entry: 指定入口文件
     entry: "./src/index.ts",
+    target: 'node',
     // 入口文件指定完成之后对文件进行打包，把文件输出到指定的位置  【指定打包文件所在的目录】
     output: {
         // 指定打包文件的目录     __dirname,是一个成员，用来动态获取当前文件模块所属的绝对路径
         //  所以说path:path.resolve(__dirname,"dist")就是在打包之后的文件夹上拼接了一个文件夹，在打包时，直接生成。
         path: path.resolve(__dirname, 'dist'),
         // 打包后文件的文件名
-        filename: "bundle.js"
+        filename: 'index.js',
+        libraryTarget: 'umd'
     },
+    resolve: {
+        extensions: [ '.tsx', '.ts', '.js' ]
+    },
+    devtool: 'source-map',
     // 指定webpack打包时要使用的模块
     module: {
         // 指定要加载的规则
@@ -24,7 +30,17 @@ module.exports = {
                 use: 'ts-loader',
                 // 要排除的文件
                 exclude: /node-modules/
-            }
+            },
+            {
+                test: /\.tsx?$/,
+                use: 'babel-loader',
+                exclude: /node_modules/,
+            },
+            {
+                test: /\.js$/,
+                use: ['source-map-loader'],
+                enforce: 'pre',
+            },
         ]
     }
 }

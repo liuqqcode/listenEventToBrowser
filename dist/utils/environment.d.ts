@@ -1,1 +1,1 @@
-export default function (): "wxapp" | "wxh5" | "browser" | "app";
+export default function (): "browser" | "wxapp" | "wxh5" | "app";

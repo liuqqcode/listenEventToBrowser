@@ -7,6 +7,8 @@
     "outDir": "./dist",
     "rootDir": "./src",
   },
-  "include": ["src/**/*", "utils/common.ts", "utils/environment.ts", "utils/watch", "utils/common.js", "utils/environment.js"],
+  "include": [
+    "src/**/*"
+  ],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

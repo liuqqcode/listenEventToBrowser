@@ -1,4 +1,4 @@
-import click from './utils/watch/click'
+import click from "./utils/watch/click"
 // import event from "./utils/watch/event";
 import hide from "./utils/watch/hide";
 import move from "./utils/watch/move";
@@ -10,20 +10,24 @@ export declare interface initFace {
   url: string
   userID?: string
   timeOut?: number
-  headers?: any
+  headers?: any,
+  showHide?: boolean
+  sign?: string
 }
 
 export default class extends common {
   private ids: Array<any> = []
   private time: number = 1000; // 节流的间隔时间
+  private showHide: boolean = false
 
   /**
    * 初始化
    * */
-  init({ ids, url, userID, timeOut, headers }: initFace) {
+  init({ ids, url, userID, timeOut, headers, showHide, sign}: initFace) {
     let that = this
     that.ids = ids
     that.time = timeOut || 1000
+    that.showHide = showHide
     this.setUserID(userID || '')
     this.setUrl(url)
     this.setHeaders(headers)
@@ -36,10 +40,10 @@ export default class extends common {
      * 监听页面显示 隐藏
      * */
     document.addEventListener('visibilitychange', throttle(function () {
-      if (document.visibilityState === "hidden") {
+      if (document.visibilityState === "hidden" && that.showHide) {
         hide('hide')
       }
-      if (document.visibilityState === "visible") {
+      if (document.visibilityState === "visible" && that.showHide) {
         show('show')
       }
     }, 100), true)

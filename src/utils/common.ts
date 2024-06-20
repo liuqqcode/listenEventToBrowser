@@ -1,4 +1,5 @@
 import FingerprintJS from '@fingerprintjs/fingerprintjs'; // 浏览器指纹识别库
+let md5 = require('md5')
 import platform from "./environment"
 import axios from "axios";
 
@@ -8,6 +9,7 @@ let mac = '' as string
 let status = false as boolean
 let obj = {} as any
 let headers = {} as any
+let sign = '' as string
 let startTime =  window.performance.timeOrigin as number
 
 let eventTime = {
@@ -85,6 +87,13 @@ export default class {
   }
   
   /**
+   * 设置sign
+   * */
+  setSign(obj:any) {
+    sign = obj
+  }
+  
+  /**
    * 设置当前时间为开始时间，刷新开始时间
    * */
   resetStartTime() {
@@ -153,6 +162,7 @@ export const request = (data:any, type:string) => {
       type,
       mac,
       userID,
+      sign: md5(mac + timestamp()),
       obj: tempObj,
       data: data,
       env: platform(),
