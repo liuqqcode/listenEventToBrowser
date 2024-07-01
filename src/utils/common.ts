@@ -10,7 +10,7 @@ let status = false as boolean
 let obj = {} as any
 let headers = {} as any
 let sign = '' as string
-let startTime =  window.performance.timeOrigin as number
+let startTime = window.performance.timeOrigin as number
 
 let eventTime = {
   click: 0,
@@ -22,77 +22,78 @@ let eventTime = {
 
 // 对外暴露的方法，
 export default class {
-  
+
   /**
    * 设置请求的userid
    * */
-  setUserID = (e:string) => {
+  setUserID = (e: string) => {
     userID = e
   }
-  
+
   /**
    * 设置请求的url
    * */
-  setUrl = (e:string) => {
+  setUrl = (e: string) => {
     url = e
   }
-  
+
   /**
    * 设置请求开始结束
    * */
-  setStatus = (e:boolean) => {
+  setStatus = (e: boolean) => {
     status = e
   }
-  
+
   /**
    * 获取mac
    * */
   getMac = () => {
     return mac
   }
-  
+
   /**
    * 设置新的mac
    * */
-  setMac(str:string){
+  setMac(str: string) {
     mac = str
   }
-  
+
   /**
    * 设置自定义的对象
    * */
-  setObj(val:any) {
+  setObj(val: any) {
     obj = val
   }
-  
+
   /**
    * 获取自定义的对象
    * */
   getObj() {
     return obj
   }
-  
+
   /**
    * 主动触发请求
    * */
-  request(type: string, data:any){
-    request(data, type)
+  request(obj: any, type: string) {
+    this.setObj(obj)
+    request('', type)
   }
-  
+
   /**
    * 设置headers
    * */
-  setHeaders(obj:any) {
+  setHeaders(obj: any) {
     headers = obj
   }
-  
+
   /**
    * 设置sign
    * */
-  setSign(obj:any) {
+  setSign(obj: any) {
     sign = obj
   }
-  
+
   /**
    * 设置当前时间为开始时间，刷新开始时间
    * */
@@ -104,7 +105,7 @@ export default class {
 /**
  * 获取浏览器mac
  * */
-const getMac = async() => {
+const getMac = async () => {
   const fp = await FingerprintJS.load()
   const result = await fp.get()
   mac = result.visitorId
@@ -120,9 +121,9 @@ export const timestamp = () => {
 /**
  * js节流
  * */
-export function throttle(fn:any, delay:number) {
+export function throttle(fn: any, delay: number) {
   let lastExecutionTime = 0;
-  return function(...args:any) {
+  return function (...args: any) {
     const currentTime = Date.now();
     if (currentTime - lastExecutionTime >= delay) {
       fn(...args);
@@ -134,11 +135,11 @@ export function throttle(fn:any, delay:number) {
 /**
  * 设置事件触发的时间
  * */
-export function setDoTime(type:string){
+export function setDoTime(type: string) {
   if (timestamp() - eventTime[type] > 10) {
     eventTime[type] = timestamp()
     return true
-  }else {
+  } else {
     eventTime[type] = timestamp()
     return false
   }
@@ -149,8 +150,8 @@ export function setDoTime(type:string){
 /**
  * 发送请求，
  * */
-export const request = (data:any, type:string) => {
-  if (!status){
+export const request = (data: any, type: string) => {
+  if (!status) {
     return
   }
   for (let key in headers) {
@@ -158,16 +159,23 @@ export const request = (data:any, type:string) => {
   }
   setTimeout(() => {
     let tempObj = JSON.parse(JSON.stringify(obj))
+    let year = new Date().getFullYear()
+    let month = new Date().getMonth() + 1
+    let day = new Date().getDate()
+    let hour = new Date().getHours()
+    let minute = new Date().getMinutes()
+    let second = new Date().getSeconds()
+    let time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
     axios.post(url, {
       type,
       mac,
       userID,
-      sign: md5(mac + timestamp()),
+      sign: md5(mac + time),
       obj: tempObj,
       data: data,
       env: platform(),
       page: window.location.href,
-      time: timestamp(),
+      time: time,
       showTime: parseInt(String(new Date().getTime() - startTime))
     }).then()
     obj = {}

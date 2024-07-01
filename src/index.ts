@@ -12,22 +12,24 @@ export declare interface initFace {
   timeOut?: number
   headers?: any,
   showHide?: boolean
-  sign?: string
+  touchmove?: boolean
 }
 
 export default class extends common {
   private ids: Array<any> = []
   private time: number = 1000; // 节流的间隔时间
   private showHide: boolean = false
+  private touchmove: boolean = true
 
   /**
    * 初始化
    * */
-  init({ ids, url, userID, timeOut, headers, showHide, sign}: initFace) {
+  init({ ids, url, userID, timeOut, headers, showHide, touchmove}: initFace) {
     let that = this
     that.ids = ids
     that.time = timeOut || 1000
     that.showHide = showHide
+    that.touchmove = touchmove
     this.setUserID(userID || '')
     this.setUrl(url)
     this.setHeaders(headers)
@@ -35,7 +37,7 @@ export default class extends common {
 
   start() {
     let that = this
-    this.setStatus(true)
+      this.setStatus(true)
     /**
      * 监听页面显示 隐藏
      * */
@@ -68,10 +70,12 @@ export default class extends common {
      * 监听手指滑动
      * */
     document.addEventListener('touchmove', throttle(function (e: any) {
-      move(JSON.stringify({
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY
-      }))
+      if (that.touchmove) {
+        move(JSON.stringify({
+          x: e.touches[0].clientX,
+          y: e.touches[0].clientY
+        }))
+      }
     }, that.time), true);
 
     /**
