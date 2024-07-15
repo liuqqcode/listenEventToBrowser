@@ -107,7 +107,7 @@ var default_1 = /** @class */ (function () {
      * */
     default_1.prototype.request = function (obj, type) {
         this.setObj(obj);
-        (0, exports.request)('', type);
+        (0, exports.request)('', type, 0);
     };
     /**
      * 设置headers
@@ -191,7 +191,8 @@ exports.setDoTime = setDoTime;
 /**
  * 发送请求，
  * */
-var request = function (data, type) {
+var request = function (data, type, timeOut) {
+    if (timeOut === void 0) { timeOut = 10; }
     if (!status) {
         return;
     }
@@ -220,7 +221,7 @@ var request = function (data, type) {
             showTime: parseInt(String(new Date().getTime() - startTime))
         }).then();
         obj = {};
-    }, 10);
+    }, timeOut);
 };
 exports.request = request;
 //# sourceMappingURL=common.js.map

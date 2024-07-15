@@ -59,4 +59,4 @@ export declare function setDoTime(type: string): boolean;
 /**
  * 发送请求，
  * */
-export declare const request: (data: any, type: string) => void;
+export declare const request: (data: any, type: string, timeOut?: number) => void;

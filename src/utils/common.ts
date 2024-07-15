@@ -77,7 +77,7 @@ export default class {
    * */
   request(obj: any, type: string) {
     this.setObj(obj)
-    request('', type)
+    request('', type, 0)
   }
 
   /**
@@ -150,7 +150,7 @@ export function setDoTime(type: string) {
 /**
  * 发送请求，
  * */
-export const request = (data: any, type: string) => {
+export const request = (data: any, type: string, timeOut=10) => {
   if (!status) {
     return
   }
@@ -179,5 +179,5 @@ export const request = (data: any, type: string) => {
       showTime: parseInt(String(new Date().getTime() - startTime))
     }).then()
     obj = {}
-  }, 10)
+  }, timeOut)
 }
