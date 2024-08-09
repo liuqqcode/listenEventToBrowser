@@ -49,6 +49,7 @@ var obj = {};
 var headers = {};
 var sign = '';
 var startTime = window.performance.timeOrigin;
+var windowShowTime = window.performance.timeOrigin;
 var eventTime = {
     click: 0,
     mouseMove: 0,
@@ -107,7 +108,7 @@ var default_1 = /** @class */ (function () {
      * */
     default_1.prototype.request = function (obj, type) {
         this.setObj(obj);
-        (0, exports.request)('', type);
+        (0, exports.request)('', type, 0);
     };
     /**
      * 设置headers
@@ -191,27 +192,51 @@ exports.setDoTime = setDoTime;
 /**
  * 发送请求，
  * */
-var request = function (data, type) {
+var request = function (data, type, timeOut) {
     if (!status) {
         return;
+    }
+    if (timeOut == 0) {
+        postAxios();
+    }
+    else {
+        setTimeout(function () {
+            postAxios();
+        }, timeOut);
     }
     for (var key in headers) {
         axios_1.default.defaults.headers.common[key] = headers[key];
     }
-    setTimeout(function () {
+    function postAxios() {
         var tempObj = JSON.parse(JSON.stringify(obj));
         var year = new Date().getFullYear();
         var month = new Date().getMonth() + 1;
+        if (month < 10) {
+            month = '0' + month;
+        }
         var day = new Date().getDate();
+        if (day < 10) {
+            day = '0' + day;
+        }
         var hour = new Date().getHours();
+        if (hour < 10) {
+            hour = '0' + hour;
+        }
         var minute = new Date().getMinutes();
+        if (minute < 10) {
+            minute = '0' + minute;
+        }
         var second = new Date().getSeconds();
+        if (second < 10) {
+            second = '0' + second;
+        }
         var time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
         axios_1.default.post(url, {
             type: type,
             mac: mac,
             userID: userID,
             sign: md5(mac + time),
+            sessionId: md5(windowShowTime),
             obj: tempObj,
             data: data,
             env: (0, environment_1.default)(),
@@ -220,6 +245,6 @@ var request = function (data, type) {
             showTime: parseInt(String(new Date().getTime() - startTime))
         }).then();
         obj = {};
-    }, 10);
+    }
 };
 exports.request = request;

@@ -11,6 +11,7 @@ let obj = {} as any
 let headers = {} as any
 let sign = '' as string
 let startTime = window.performance.timeOrigin as number
+let windowShowTime = window.performance.timeOrigin as number
 
 let eventTime = {
   click: 0,
@@ -22,56 +23,56 @@ let eventTime = {
 
 // 对外暴露的方法，
 export default class {
-
+  
   /**
    * 设置请求的userid
    * */
   setUserID = (e: string) => {
     userID = e
   }
-
+  
   /**
    * 设置请求的url
    * */
   setUrl = (e: string) => {
     url = e
   }
-
+  
   /**
    * 设置请求开始结束
    * */
   setStatus = (e: boolean) => {
     status = e
   }
-
+  
   /**
    * 获取mac
    * */
   getMac = () => {
     return mac
   }
-
+  
   /**
    * 设置新的mac
    * */
   setMac(str: string) {
     mac = str
   }
-
+  
   /**
    * 设置自定义的对象
    * */
   setObj(val: any) {
     obj = val
   }
-
+  
   /**
    * 获取自定义的对象
    * */
   getObj() {
     return obj
   }
-
+  
   /**
    * 主动触发请求
    * */
@@ -79,21 +80,21 @@ export default class {
     this.setObj(obj)
     request('', type, 0)
   }
-
+  
   /**
    * 设置headers
    * */
   setHeaders(obj: any) {
     headers = obj
   }
-
+  
   /**
    * 设置sign
    * */
   setSign(obj: any) {
     sign = obj
   }
-
+  
   /**
    * 设置当前时间为开始时间，刷新开始时间
    * */
@@ -150,27 +151,51 @@ export function setDoTime(type: string) {
 /**
  * 发送请求，
  * */
-export const request = (data: any, type: string, timeOut=10) => {
+export const request = (data: any, type: string, timeOut?:number) => {
   if (!status) {
     return
+  }
+  
+  if (timeOut == 0) {
+    postAxios()
+  }else{
+    setTimeout(() => {
+      postAxios()
+    }, timeOut)
   }
   for (let key in headers) {
     axios.defaults.headers.common[key] = headers[key]
   }
-  setTimeout(() => {
+  function postAxios(){
     let tempObj = JSON.parse(JSON.stringify(obj))
     let year = new Date().getFullYear()
-    let month = new Date().getMonth() + 1
-    let day = new Date().getDate()
-    let hour = new Date().getHours()
-    let minute = new Date().getMinutes()
-    let second = new Date().getSeconds()
+    let month:number|string = new Date().getMonth() + 1
+    if (month < 10) {
+      month = '0' + month
+    }
+    let day:number|string = new Date().getDate()
+    if (day< 10){
+      day = '0' + day
+    }
+    let hour:number|string = new Date().getHours()
+    if (hour<10){
+      hour = '0' + hour
+    }
+    let minute:number|string = new Date().getMinutes()
+    if (minute<10){
+      minute = '0' + minute
+    }
+    let second:number|string = new Date().getSeconds()
+    if (second<10){
+      second = '0' + second
+    }
     let time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
     axios.post(url, {
       type,
       mac,
       userID,
       sign: md5(mac + time),
+      sessionId: md5(windowShowTime),
       obj: tempObj,
       data: data,
       env: platform(),
@@ -179,5 +204,5 @@ export const request = (data: any, type: string, timeOut=10) => {
       showTime: parseInt(String(new Date().getTime() - startTime))
     }).then()
     obj = {}
-  }, timeOut)
+  }
 }
