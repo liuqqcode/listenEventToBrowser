@@ -231,12 +231,19 @@ var request = function (data, type, timeOut) {
             second = '0' + second;
         }
         var time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+        var sessionId = '';
+        try {
+            sessionId = md5('' + windowShowTime);
+        }
+        catch (e) {
+            sessionId = '' + windowShowTime;
+        }
         axios_1.default.post(url, {
             type: type,
             mac: mac,
             userID: userID,
             sign: md5(mac + time),
-            sessionId: md5(windowShowTime),
+            sessionId: sessionId,
             obj: tempObj,
             data: data,
             env: (0, environment_1.default)(),
