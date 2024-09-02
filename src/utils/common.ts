@@ -190,12 +190,18 @@ export const request = (data: any, type: string, timeOut?:number) => {
       second = '0' + second
     }
     let time = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second
+    let sessionId = ''
+    try {
+      sessionId = md5('' + windowShowTime)
+    }catch (e) {
+      sessionId = '' + windowShowTime
+    }
     axios.post(url, {
       type,
       mac,
       userID,
       sign: md5(mac + time),
-      sessionId: md5(windowShowTime),
+      sessionId,
       obj: tempObj,
       data: data,
       env: platform(),

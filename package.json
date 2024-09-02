@@ -1,6 +1,6 @@
 {
   "name": "watchbrowser",
-  "version": "1.1.13",
+  "version": "1.1.15",
   "description": "监听浏览器行为",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
